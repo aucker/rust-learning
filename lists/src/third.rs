@@ -75,6 +75,10 @@ impl<T> Drop for List<T> {
     }
 }
 
+// Arc is completely identical to Rc except for the fact that reference counts are modified atomically.
+// Arc is used to 
+
+
 #[cfg(test)]
 mod test {
     use super::List;
