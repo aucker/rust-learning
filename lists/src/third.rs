@@ -54,6 +54,27 @@ impl<'a, T> Iterator for Iter<'a, T> {
 }
 
 
+impl<T> Drop for List<T> {
+    fn drop(&mut self) {
+        // let mut cur_link = self.head.take();
+        // while let Some(mut boxed_node) = cur_link {
+        //     cur_link = boxed_node.next.take();
+        // }
+        // Why Rc?
+        // Rc only gives us shared access, any number of other Rc's could be pointing at it
+        // if we know that we're the last list that knows about this node, it would actually 
+        // be fine to move the node out of the Rc
+        let mut head = self.head.take();
+        while let Some(node) = head {
+            if let Ok(mut node) = Rc::try_unwrap(node) {
+                head = node.next.take();
+            } else {
+                break;
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::List;
