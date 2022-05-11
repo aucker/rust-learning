@@ -7,6 +7,7 @@ pub struct List<T> {
 }
 
 pub struct IntoIter<T>(List<T>);
+// pub struct Iter<T>(Option<Ref<Node<T>>>);
 
 type Link<T> = Option<Rc<RefCell<Node<T>>>>;
 
@@ -138,6 +139,10 @@ impl<T> List<T> {
     pub fn into_iter(self) -> IntoIter<T> {
         IntoIter(self)
     }
+
+    // pub fn iter(&self) -> Iter<T> {
+    //     Iter(self.head.as_ref().map(|head| head.clone()))
+    // }
 }
 
 impl<T> Drop for List<T> {
@@ -161,6 +166,31 @@ impl<T> DoubleEndedIterator for IntoIter<T> {
     }
 }
 
+// impl<'a, T> Iterator for Iter<'a, T> {
+//     type Item = Ref<'a, T>;
+//     // fn next(&mut self) -> Option<Self::Item> {
+//     //     self.0.take().map(|node_ref| {
+//     //         self.0 = node_ref.next.as_ref().map(|head| head.borrow());
+//     //         Ref::map(node_ref, |node| &node.elem)
+//     //     })
+//     // }
+//     fn next(&mut self) -> Option<Self::Item> {
+//         self.0.take().map(|node_ref| {
+//             let (next, elem) = Ref::map_split(node_ref, |node| {
+//                 (&node.next, &node.elem)
+//             });
+
+//             // self.0 = next.as_ref().map(|head| head.borrow());
+//             self.0 = if next.is_some() {
+//                 Some(Ref::map(next, |next| &**next.as_ref().unwrap()))
+//             } else {
+//                 None
+//             };
+
+//             elem
+//         })
+//     }
+// }
 
 #[cfg(test)]
 mod test {
