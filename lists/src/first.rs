@@ -1,8 +1,8 @@
 // This is a impl of bad stack
 
-// In functional programming, a List can be defined as 
+// In functional programming, a List can be defined as
 // List a = Empty | Elem a (List a)
-// A List is either Empty or an Element followed by a List 
+// A List is either Empty or an Element followed by a List
 
 // pub enum List {
 //     Empty,
@@ -18,7 +18,7 @@
 //     Empty,
 //     More(Box<Node>),
 // }
-// 
+//
 use std::mem;
 
 pub struct List {
@@ -60,7 +60,6 @@ impl List {
             }
         }
         // unimplemented!()
-
     }
 }
 
@@ -112,12 +111,12 @@ mod test {
         // empty list
         assert_eq!(list.pop(), None);
 
-        // populate list 
+        // populate list
         list.push(1);
         list.push(2);
         list.push(3);
 
-        // normal remove 
+        // normal remove
         assert_eq!(list.pop(), Some(3));
         assert_eq!(list.pop(), Some(2));
 
