@@ -146,3 +146,9 @@ mod test {
         assert_eq!(list.pop(), None);
     }
 }
+
+// MARK:
+// MIR: mid-level intermediate representation
+// TL;DR: it interprets your program and notices if you break the rules at runtime and Do An Undefined Behaviour.
+// This is necessary because Undefined Behaviour is generally a thing that happens at runtime. If the issue could 
+// be found at compile time, the compiler would just nake it an error!
