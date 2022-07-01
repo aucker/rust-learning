@@ -5,7 +5,7 @@ This repo is a collection of some projects writing in rust when I learn **The Ru
 
 ## OS lab
 
-I'm now learning the OS in Rust:crab:, and I will record every day I learned in the [daily record]() file. 
+I'm now learning the OS in Rust:crab:, and I will record every day I learned in the [daily record](https://github.com/aucker/rust-learning/tree/main/OS_lab) file. 
 
 ## grrs
 

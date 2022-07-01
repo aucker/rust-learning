@@ -25,17 +25,15 @@
 今天在GitHub classroom里配置了项目，之后在codespace中完成了rust，riscv工具链的安装配置，同时正在看lab0-0的文档。
 
 codespace：
-> Pros:
-> no need to configure the proxy
-> network speed is fast
-> Cons:
-> some bugs
-> rust-analyzer doesn't work well
+* Pros:
+    * no need to configure the proxy
+    * network speed is fast
+* Cons:
+    * some bugs
+    * rust-analyzer doesn't work well
 
 ### Plans: 
 
 完成schedule中的Rust小测试
 快速学习riscv相关知识
 
-
-- 具体内容参考今日笔记文档[Day1_rust](daily_study/Day1_rust.md)
