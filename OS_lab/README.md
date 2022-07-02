@@ -37,3 +37,71 @@ codespace：
 完成schedule中的Rust小测试
 快速学习riscv相关知识
 
+## Day 2 2022/7/2
+
+### OS Training Camp
+
+虽然codespace很方便，不用配置proxy，但是延迟也太高了吧，而且rust-analyzer还有bug，然后我突然想起来前段时间还有一台闲置的华为云服务器，Ubuntu就是不同折腾，然后将codespace环境迁移到华为云，配置好环境之后就可以干活了。
+
+需要做的不多，无非是换一个源，之后rusttoolchain，riscv重新下载编译，就是这个编译速度有点慢。
+
+* rust-toolchain
+  * 使用tuna源
+    
+    ```shell
+    export RUSTUP_DIST_SERVER=https://mirrors.tuna.edu.cn/rustup
+    export RUSTUP_UPDATE_ROOT=https://mirrors.tuna.edu.cn/rustup/rustup
+    ```
+  * 安装rust
+    ```shell
+    curl https://sh.rustup.rs -sSf | sh
+    ```
+  * 配置cargo，在`~/.cargo/config`中添加：
+    ```shell
+    [source.crates-io]
+    replace-with = 'tuna'
+
+    [source.tuna]
+    registry = "https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git"
+    ```
+* riscv
+  * 从官网下载源码
+    ```shell
+    wget https://download.qemu.org/qemu-7.0.0.tar.xz
+    ```
+    *解压时用命令* `tar xvJf qemu*`
+  * 安装编译所需依赖
+    ```shell
+    sudo apt install autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev \
+              gawk build-essential bison flex texinfo gperf libtool patchutils bc \
+              zlib1g-dev libexpat-dev pkg-config  libglib2.0-dev libpixman-1-dev git tmux python3 ninja-build
+    ```
+  * 编译
+    ```shell
+    cd qemu-7.0.0
+    ./configure --target-list=riscv64-softmmu,riscv64-linux-user
+    make -j$(nproc)
+    ```
+  * 安装
+    ```shell
+    sudo make install
+    ```
+    这会将qemu安装到`/usr/local/share`目录下,之后在`~/.zshrc`中添加如下
+    ```shell
+    export PATH=$PATH:/home/aucker/Downloads/build/qemu-7.0.0/riscv64-softmmu
+    export PATH=$PATH:/home/aucker/Downloads/build/qemu-7.0.0/riscv64-linux-user
+    export PATH=$PATH:/home/aucker/Downloads/build/qemu-7.0.0
+    ```
+    之后确认riscv的版本
+    ```shell
+    ➜  qemu-7.0.0 qemu-system-riscv64 --version
+    QEMU emulator version 7.0.0
+    Copyright (c) 2003-2022 Fabrice Bellard and the QEMU Project developers
+    ➜  qemu-7.0.0 qemu-riscv64 --version
+    qemu-riscv64 version 7.0.0
+    Copyright (c) 2003-2022 Fabrice Bellard and the QEMU Project developers
+    ```
+
+* rCore-Tutarial：
+
+    好像忘记了华为云git不好用，我直接傻眼😯，难道必须要去codespace吗？:cry:
