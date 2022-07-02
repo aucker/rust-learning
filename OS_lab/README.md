@@ -46,11 +46,13 @@ codespace：
 需要做的不多，无非是换一个源，之后rusttoolchain，riscv重新下载编译，就是这个编译速度有点慢。
 
 * rust-toolchain
-  * 使用tuna源
+  * 使用ustc源
     
     ```shell
-    export RUSTUP_DIST_SERVER=https://mirrors.tuna.edu.cn/rustup
-    export RUSTUP_UPDATE_ROOT=https://mirrors.tuna.edu.cn/rustup/rustup
+    <!-- export RUSTUP_DIST_SERVER=https://mirrors.tuna.edu.cn/rustup
+    export RUSTUP_UPDATE_ROOT=https://mirrors.tuna.edu.cn/rustup/rustup -->
+    export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
+    export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
     ```
   * 安装rust
     ```shell
@@ -58,11 +60,16 @@ codespace：
     ```
   * 配置cargo，在`~/.cargo/config`中添加：
     ```shell
-    [source.crates-io]
+    <!-- [source.crates-io]
     replace-with = 'tuna'
 
     [source.tuna]
-    registry = "https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git"
+    registry = "https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git" -->
+    [source.crates-io]
+    registry = "https://github.com/rust-lang/crates.io-index"
+    replace-with = 'ustc'
+    [source.ustc]
+    registry = "git://mirrors.ustc.edu.cn/crates.io-index"
     ```
 * riscv
   * 从官网下载源码
@@ -102,6 +109,13 @@ codespace：
     Copyright (c) 2003-2022 Fabrice Bellard and the QEMU Project developers
     ```
 
-* rCore-Tutarial：
+* rCore-Tutorial：
 
     好像忘记了华为云git不好用，我直接傻眼😯，难道必须要去codespace吗？:cry:
+
+```shell
+➜  qemu-7.0.0 realpath -s riscv64-mmu
+/home/aucker/Downloads/build/qemu-7.0.0/riscv64-mmu
+```
+`realpath` can get the full path of the file.
+
