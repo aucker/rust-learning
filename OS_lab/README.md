@@ -111,7 +111,7 @@ codespace：
 
 * rCore-Tutorial：
 
-    好像忘记了华为云git不好用，我直接傻眼😯，难道必须要去codespace吗？:cry:
+    好像忘记了华为云git不好用，我直接傻眼😯，难道必须要去codespace吗？:cry:其实WSL2也是一个不错的选择:yummy:
 
 ```shell
 ➜  qemu-7.0.0 realpath -s riscv64-mmu
@@ -119,3 +119,14 @@ codespace：
 ```
 `realpath` can get the full path of the file.
 
+## Day 3 2022/7/3
+
+### OS Training Camp
+
+今天跟着教程完成了第一部分的实验。
+
+群友分享了一张关于智能指针的图片：
+![smart pointer in Rust](../images/rust_smart_pointer.jpg)
+
+步骤如下：
+* 
