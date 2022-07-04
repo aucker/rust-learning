@@ -155,9 +155,134 @@ LLVM version: 14.0.0
 
 **修改目标平台**
 
-将程序的目标平台换成``
+将程序的目标平台换成`riscv64gc-unknown-none-elf`，执行命令：
+```shell
+➜  os git:(main) ✗ cargo run --target riscv64gc-unknown-none-elf
+   Compiling os v0.1.0 (/home/aucker/rust-learning/OS_lab/my_os_toy/os)
+error[E0463]: can't find crate for `std`
+  |
+  = note: the `riscv64gc-unknown-none-elf` target may not be installed
+  = help: consider downloading the target with `rustup target add riscv64gc-unknown-none-elf`
+```
+
+报错的原因是目标平台上确实没有Rust标准库std，也不存在任何受OS支持的系统调用。这样的平台被称作**裸机平台 bare-metal**。Luckily，Rust还有一个不需要任何操作系统支持的核心库**core**，它包含了Rust的相当一部分核心机制。有很多第三方库也不依赖标准库std，而仅仅依赖核心库core。
 
 步骤如下：
+
+* **Remove the dependency of the std library**
+
+  首先在`os`目录下新建`.cargo`目录，并在这个目录下创建`config`文件，内容如下：
+
+  ```toml
+  [build]
+  target = "riscv64gc-unknown-none-elf"
+  ```
+
+  这将使cargo工具在os目录下默认会使用riscv64gc-unknown-none-elf作为目标平台。这种编译器运行的平台(x86_64)与可执行文件运行的目标平台不同的情况，称为**交叉编译 Cross Compile**。
+
+  * Remove `println!()`
+  我们在`main.rs`开头加上`#![no_std]`，这样编译器就不会使用标准库std,转而使用核心库`core`。
+  * Provide `panic_handler()` 
+  标准库std提供了Rust错误处理函数#[panic_handler]，这个函数会在程序出现错误时被调用,打印出错位置和原因并杀死当前应用。core库中并没有这项功能，所以我们需要自己实现这个函数。
+    ```rust
+    // os/src/lang_items.rs
+    use core::panic::PanicInfo;
+
+    #[panic_handler]
+    fn panic_handler(_info: &PanicInfo) -> ! {
+      loop {}
+    }
+    ```
+  * Remove `main()`
+  Then we build this program again, we got the following errors:
+    > **Error**
+    >
+    > ```shell
+    > ➜  os git:(main) ✗ cargo build
+    > Compiling os v0.1.0 (/home/aucker/rust-learning/OS_lab/my_os_toy/os)
+    > error: requires `start` lang_item
+    > 
+    > error: could not compile `os` due to previous error
+    > ```
+    we need `start`. `start` represents what `std` library needs to do some initialization work before executing a program.
+
+    We add `#![no_main]` to inform the compiler that we don't have a `main` function. And compiler don't need to consider the initialization work. 
+
+    Now, we finally remove all the `std` library dependencies, the codes look like this:
+    ```rust
+    // os/src/main.rs
+    #![no_std]
+    #![no_main]
+
+    mod lang_items;
+
+    // os/src/lang_items.rs
+    use core::panic::PanicInfo;
+
+    #[panic_handler]
+    fn panic_handler(_info: &PanicInfo) -> ! {
+      loop {}
+    }
+    ```
+
+  * Analyze the program that was removed the `std` library
+  
+    We need `rust-readobj`, use `cargo install rust-readobj` to install it.
+  
+    We can use some tools to analyze the program:
+  
+    ```shell
+    ➜  os git:(main) ✗ file target/riscv64gc-unknown-none-elf/debug/os           
+    target/riscv64gc-unknown-none-elf/debug/os: ELF 64-bit LSB executable, UCB RISC-V, version 1 (SYSV), statically linked, with debug_info, not stripped
+    ➜  os git:(main) ✗ rust-readobj -h target/riscv64gc-unknown-none-elf/debug/os
+
+    File: target/riscv64gc-unknown-none-elf/debug/os
+    Format: elf64-littleriscv
+    Arch: riscv64
+    AddressSize: 64bit
+    LoadName: <Not found>
+    ElfHeader {
+      Ident {
+        Magic: (7F 45 4C 46)
+        Class: 64-bit (0x2)
+        DataEncoding: LittleEndian (0x1)
+        FileVersion: 1
+        OS/ABI: SystemV (0x0)
+        ABIVersion: 0
+        Unused: (00 00 00 00 00 00 00)
+      }
+    Type: Executable (0x2)
+    Machine: EM_RISCV (0xF3)
+    Version: 1
+    Entry: 0x0
+    ProgramHeaderOffset: 0x40
+    SectionHeaderOffset: 0x1B40
+    Flags [ (0x5)
+      EF_RISCV_FLOAT_ABI_DOUBLE (0x4)
+      EF_RISCV_RVC (0x1)
+    ]
+    HeaderSize: 64
+    ProgramHeaderEntrySize: 56
+    ProgramHeaderCount: 3
+    SectionHeaderEntrySize: 64
+    SectionHeaderCount: 14
+    StringTableSectionIndex: 12
+    }
+    ➜  os git:(main) ✗ rust-objdump -S target/riscv64gc-unknown-none-elf/debug/os
+
+    target/riscv64gc-unknown-none-elf/debug/os:     file format elf64-littleriscv
+    ```
+
+    通过`file`对二进制文件`os`的分析可以看到，它好像是一个合法的RV64执行程序，但`rust-readobj`显示它的入口地址Entry是`0`.再通过`rust-objdump`对它反汇编，没有生成任何汇编代码。可见该二进制程序虽然合法，但它是一个空程序，原因是缺少了编译器规定的入口函数`_start`。
+
+* **构建用户态执行环境**
+
+> **Note**
+> QEMU has two running mode:
+> `User mode`, such as `qemu-riscv64`, it can simulate different CPUs' User mode instructions execution, and directly parse ELF executable file, load and execute user mode Linux applications.
+> `System mode`, such as `qemu-system-riscv64`, it can simulate a complete hardware system based on different CPUs, including CPU, memory, peripherals, and so on. 
+
+
 
 ### Day 4 2022/7/4
 
