@@ -3,7 +3,10 @@
 
 use core::fmt::{Write, self};
 
+use sbi::shutdown;
+
 mod lang_items;
+mod sbi;
 
 const SYSCALL_EXIT: usize = 93;
 const SYSCALL_WRITE: usize = 64;
@@ -60,12 +63,30 @@ macro_rules! println {
     }
 }
 
+core::arch::global_asm!(include_str!("entry.asm"));
+
 #[no_mangle]
 extern "C" fn _start() {
     // panic!("Hello, world!");
     // loop {}
     println!("Hello, world!");
     sys_exit(9);
+    sbi::shutdown();
+}
+
+fn clear_bss() {
+    extern "C" {
+        fn sbss();
+        fn ebss();
+    }
+    (sbss as usize..ebss as usize).for_each(|a|
+        unsafe { (a as *mut u8).write_volatile(0) 
+    });
+}
+
+pub fn rust_main() -> ! {
+    clear_bss();
+    shutdown();
 }
 
 // fn main() {
