@@ -123,10 +123,44 @@ codespace：
 
 ### OS Training Camp
 
-今天跟着教程完成了第一部分的实验。
+**注：** 以下操作均为在GitHub codespace中执行的结果
 
 群友分享了一张关于智能指针的图片：
-![smart pointer in Rust](../images/rust_smart_pointer.jpg)
+![smart pointer in Rust](./../_images/rust_smart_pointer.jpg)
+
+今天跟着教程完成了第一部分的实验。
+
+**应用程序执行环境**
+
+在通用操作系统(如Linux)上运行应用程序，需要多层次的执行环境栈支持：
+![app software stack](../_images/app-software-stack.png)
+
+编译器在编译、链接得到可执行文件时需要知道，程序要在哪个**平台Platform**上运行，**目标三元组Target Triplet**描述了目标平台的CPU指令集、操作系统类型和标准运行时库。
+
+```shell
+➜ rustc --version --verbose
+rustc 1.61.0 (fe5b13d68 2022-05-18)
+binary: rustc
+commit-hash: fe5b13d681f25ee6474be29d748c65adcd91f69e
+commit-date: 2022-05-18
+host: x86_64-unknown-linux-gnu
+release: 1.61.0
+LLVM version: 14.0.0
+```
+`host`表明目标默认平台是`x86_64-unknown-linux-gnu`,CPU架构是x86_64，厂商unknown，操作系统为Linux，运行时库为gnu libc。
+
+实验一的目的是将初始程序移植到RISCV目标平台`riscv64gc-unknown-none-elf`上运行。
+
+其中，`elf`表示没有标准的运行时库。没有任何系统调用的封装支持，但可以生成ELF格式的执行程序。不选择有`linux-gnu`支持的`riscv64gc-unknown-linux-gnu`，是因为我们的目标是开发操作系统内核而非在Linux操作系统上执行应用程序。
+
+**修改目标平台**
+
+将程序的目标平台换成``
 
 步骤如下：
-* 
+
+### Day 4 2022/7/4
+
+今天重新回顾了rustling
+
+**Plans：** 完成rustling中的练习题
