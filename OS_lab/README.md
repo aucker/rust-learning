@@ -332,3 +332,56 @@ fn string_uppercase(mut data: String) {
 
 In Rust, `String` doesn't implement `Copy` trait, so it can't be copied.
 
+Get a slice out of an array:
+```rust
+// primitive_types4.rs
+#[test]
+fn slice_out_of_array() {
+    let a = [1, 2, 3, 4, 5];
+
+    let nice_slice = &a[1 .. 4];
+
+    assert_eq!([2, 3, 4], nice_slice)
+}
+```
+
+The [Tuple Type](https://doc.rust-lang.org/book/ch03-02-data-types.html#the-tuple-type) is awesome！
+
+```rust
+// primitive_types5.rs
+fn main() {
+  let cat = ("Furry McFurson", 3.5);
+  let (name, age)/* your pattern here */ = cat;
+
+  println!("{} is {} years old.", name, age);
+}
+```
+
+The different [Structs](https://doc.rust-lang.org/book/ch05-01-defining-structs.html) in Rust.
+
+```rust
+// structs.rs
+
+struct ColorClassicStruct {
+    name: String,
+    hex: String,
+}
+struct ColorTupleStruct<'a, 'b>(&'a str, &'b str);
+// well, well, well, here comes with lifetime variables
+#[derive(Debug)]
+struct UnitStruct;
+
+let green = ColorClassicStruct {
+    // name: "green".to_string(),
+    // hex: "#00FF00".to_string(),
+    name: String::from("green"),
+    hex: String::from("#00FF00"),
+};
+
+let green = ColorTupleStruct("green", "#00FF00");
+
+let unit_struct = UnitStruct;
+```
+
+enum3.rs in Rustlings is very interesting for reference.
+
