@@ -289,3 +289,46 @@ error[E0463]: can't find crate for `std`
 今天重新回顾了rustling
 
 **Plans：** 完成rustling中的练习题
+
+### Day 5 2022/7/5
+
+今天的目标是完成rustlings中的练习题
+
+* Shadowing in Rust
+https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html#shadowing
+
+* CONSTANT
+const must come with a TYPE annotation.
+https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html#constants
+
+
+### Day 6 2022/7/6
+
+[Ownership in Rust: References and Borrowing](https://doc.rust-lang.org/stable/book/ch04-02-references-and-borrowing.html)
+
+```rust
+// move_semantics.rs
+
+fn main() {
+    let data = "Rust is great!".to_string();
+
+    get_char(&data);
+
+    string_uppercase(data);
+}
+
+// Should not take ownership
+fn get_char(data: &String) -> char {
+    data.chars().last().unwrap()
+}
+
+// Should take ownership
+fn string_uppercase(mut data: String) {
+    data = data.to_uppercase();
+
+    println!("{}", data);
+}
+```
+
+In Rust, `String` doesn't implement `Copy` trait, so it can't be copied.
+
