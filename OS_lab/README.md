@@ -383,5 +383,26 @@ let green = ColorTupleStruct("green", "#00FF00");
 let unit_struct = UnitStruct;
 ```
 
-enum3.rs in Rustlings is very interesting for reference.
+enum3.rs in Rustlings is very interesting for reference. Use the [match](https://doc.rust-lang.org/book/ch18-03-pattern-syntax.html?highlight=match#multiple-patterns) in Rust.
+
+Plus, modules3.rs in Rustlings is also interesting to implement.
+
+Remember the initialization of HashMap:
+```rust
+// hashmap.rs
+let mut basket = HashMap::new();
+basket.insert("apple", 1);
+```
+
+**Rustlings**: finish the 66% of rustlings exercises.
+
+### Day 7 2022/7/7
+
+**Rustlings**: I'll finish the rest of the rustlings exercises.
+
+The trait `std::fmt::Display` is not implemented for `HashMap` and `Option<Option<i8>>`.
+
+So in format strings use `{:?}` instead of `{}`.
+
+Option is so hard.
 
