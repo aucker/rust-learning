@@ -406,3 +406,10 @@ So in format strings use `{:?}` instead of `{}`.
 
 Option is so hard.
 
+### Day 8 2022/7/8
+
+Finished the rustlings tests, but some questions still not quite understood.
+
+Plus, I finished lab0-1
+
+### Day 9 2022/7/9
