@@ -111,7 +111,7 @@ codespace：
 
 * rCore-Tutorial：
 
-    好像忘记了华为云git不好用，我直接傻眼😯，难道必须要去codespace吗？:cry:其实WSL2也是一个不错的选择:yummy:
+    好像忘记了华为云git不好用，我直接傻眼😯，难道必须要去codespace吗？:cry:其实WSL2也是一个不错的选择:yum:
 
 ```shell
 ➜  qemu-7.0.0 realpath -s riscv64-mmu
@@ -414,14 +414,19 @@ Plus, I finished lab0-1
 
 ### Day 9 2022/7/9
 
-完成了rustlings的内容，同时完成了实验先导lab0。
-之前在WSL2中配置的ubuntu20.04用vscode本来挺舒服的，但是后来发现16G的内存开几个vscode就卡起来了，资源管理器中vemm内存占用极高，而华为云服务器又不能正常使用github，因此最终决定在ubuntu上完成接下来的实验。All in ubuntu。完成ubuntu的安装以及所需软件的安装配置。
+* 完成了rustlings的内容，同时完成了实验先导lab0。
+* 之前在WSL2中配置的ubuntu20.04用vscode本来挺舒服的，但是后来发现16G的内存开几个vscode就卡起来了，资源管理器中vemm内存占用极高，而华为云服务器又不能正常使用github，因此最终决定在ubuntu上完成接下来的实验。
+* All in ubuntu。完成ubuntu的安装以及所需软件的安装配置。
 
 ### Day 10 2022/7/10
 
-
+* 开始进行lab1的实验，对照实验手册将lab1中的代码看懂，并熟悉代码结构
+* 开始学习熟悉risc-v中的相关指令和汇编代码
+* 学习rust的
 
 ### Day 11 2022/7/11
+
+* 通过了lab1的CI测试
 
 ### Day 12 2022/7/12
 
@@ -432,6 +437,10 @@ Plus, I finished lab0-1
 ### Day 15 2022/7/15
 
 ### Day 16 2022/7/16
+
+* 通过了lab2的CI测试
+
+![lab2-os4](../_images/lab2-os4.png)
 
 ### Day 17 2022/7/17
 
@@ -456,6 +465,9 @@ Plus, I finished lab0-1
 ### Day 27 2022/7/27
 
 ### Day 28 2022/7/28
+
+* 通过了lab3的CI测试
+![lab3-os5](../_images/lab3-os5.png)
 
 ### Day 29 2022/7/29
 
