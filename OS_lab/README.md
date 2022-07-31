@@ -426,7 +426,19 @@ Plus, I finished lab0-1
 
 ### Day 11 2022/7/11
 
+```rust
+// syscall/process.rs
+/// YOUR JOB: Finish sys_task_info to pass testcases
+pub fn sys_task_info(ti: *mut TaskInfo) -> isize {
+    // -1
+    set_task_info(ti);
+    0
+}
+```
+
 * 通过了lab1的CI测试
+
+![lab1-os3](../_images/lab1-os3.png)
 
 ### Day 12 2022/7/12
 
@@ -435,6 +447,53 @@ Plus, I finished lab0-1
 ### Day 14 2022/7/14
 
 ### Day 15 2022/7/15
+
+```rust
+// syscall/process.rs
+// YOUR JOB: 引入虚地址后重写 sys_get_time
+pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
+    let us = get_time_us();
+    // unsafe {
+    //     *ts = TimeVal {
+    //         sec: us / 1_000_000,
+    //         usec: us % 1_000_000,
+    //     };
+    // }
+    translated_assign_ptr(
+        current_user_token(),
+        ts,
+        TimeVal {
+            sec: us / 1_000_000,
+            usec: us % 1_000_000,
+        }
+    );
+    0
+}
+
+...
+
+// YOUR JOB: 扩展内核以实现 sys_mmap 和 sys_munmap
+pub fn sys_mmap(start: usize, len: usize, port: usize) -> isize {
+    // -1
+    mmap_in_current_memory_set(start, len, port)
+}
+
+pub fn sys_munmap(start: usize, len: usize) -> isize {
+    // -1
+    munmap_in_current_memory_set(start, len)
+}
+
+// YOUR JOB: 引入虚地址后重写 sys_task_info
+pub fn sys_task_info(ti: *mut TaskInfo) -> isize {
+    // -1
+    translated_assign_ptr(
+        current_user_token(),
+        ti,
+        get_task_info()
+    );
+    0
+}
+```
 
 ### Day 16 2022/7/16
 
@@ -464,9 +523,49 @@ Plus, I finished lab0-1
 
 ### Day 27 2022/7/27
 
+```rust
+/// YOUR JOB: 引入虚地址后重写 sys_get_time
+pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
+    let us = get_time_us();
+    let bufs = translated_large_type::<TimeVal>(current_user_token(), ts);
+    unsafe {
+        copy_type_into_bufs::<TimeVal>(
+            &TimeVal {
+                sec: us / 1_000_000,
+                usec: us % 1_000_000,
+            },
+            bufs
+        );
+    }
+    0
+}
+
+...
+
+// YOUR JOB: 引入虚地址后重写 sys_task_info
+pub fn sys_task_info(ti: *mut TaskInfo) -> isize {
+  ...
+
+// YOUR JOB: 实现sys_set_priority，为任务添加优先级
+pub fn sys_set_priority(prio: isize) -> isize {
+  ...
+
+// YOUR JOB: 扩展内核以实现 sys_mmap 和 sys_munmap
+pub fn sys_mmap(start: usize, len: usize, port: usize) -> isize {
+  ...
+pub fn sys_munmap(start: usize, len: usize) -> isize {
+  ...
+
+// YOUR JOB: 实现 sys_spawn 系统调用
+// ALERT: 注意在实现 SPAWN 时不需要复制父进程地址空间，SPAWN != FORK + EXEC 
+pub fn sys_spawn(path: *const u8) -> isize {
+  ...
+```
+
 ### Day 28 2022/7/28
 
 * 通过了lab3的CI测试
+
 ![lab3-os5](../_images/lab3-os5.png)
 
 ### Day 29 2022/7/29
